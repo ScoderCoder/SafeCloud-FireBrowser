@@ -3,7 +3,8 @@
 
 # Import + Define lib
 import tkinter as tk
-from tkinter import ttk 
+from tkinter import *
+from tkinter import ttk
 
 import webview
 import os
@@ -52,7 +53,7 @@ class App():
     def mainpage(self):
         for widgets in self.mainframe.winfo_children():
             widgets.destroy()
-        
+
         # specify location of mainframe
         self.mainframe.pack(fill="both", expand=True) # both means both x and y
 
@@ -70,20 +71,20 @@ class App():
         set_text_button = ttk.Button(self.mainframe, text="Submit", command=self.open_website)
         set_text_button.grid(row=2, column=2, pady=10)
 
-        set_text_button = ttk.Button(self.mainframe, text="Filter Settings", command=self.filter_settings)
+        set_text_button = ttk.Button(self.mainframe, text="Filter Settings", command=self.password)
         set_text_button.grid(row=3, column=0, pady=10)
 
     def open_website(self):
         websitetoopen = self.settextfield.get()
 
-        if websitetoopen.startswith(("http://", "https://")):
-            return
-        else:
-            websitetoopen = "http://" + websitetoopen
-
         if websitetoopen in blist:
             print("Warning: User attempted to access blocked website.")
         else:
+            if websitetoopen.startswith(("http://", "https://")):
+                return
+            else:
+                websitetoopen = "http://" + websitetoopen
+
             page = webview.create_window('SafeCloud FireBrowser', websitetoopen, confirm_close=True)
             webview.start()
 
@@ -110,6 +111,37 @@ class App():
         refresh()
 
         self.filter_settings()
+
+    def password(self):
+        for widgets in self.mainframe.winfo_children():
+            widgets.destroy()
+
+        self.text = ttk.Label(self.mainframe, text="SafeCloud FireBrowser", background="gray", font=("Ubuntu", 20))
+        # specify where on the mainframe the text box will go
+        self.text.grid(row=0, column=0, padx=10)
+
+        self.text = ttk.Label(self.mainframe, text="Filter Settings", background="gray", font=("Ubuntu", 12))
+        self.text.grid(row=1, column=0, padx=10)
+
+        self.text = ttk.Label(self.mainframe, text="Enter Parental Password: ", background="gray", font=("Ubuntu", 12))
+        self.text.grid(row=2, column=0, padx=10)
+
+        self.settextfield = ttk.Entry(self.mainframe)
+        self.settextfield.grid(row=3, column=0, pady=10, padx=10, sticky="NWES")
+
+        set_text_button = ttk.Button(self.mainframe, text="Submit", command=self.check_password)
+        set_text_button.grid(row=3, column=1, pady=10)
+
+        set_text_button = ttk.Button(self.mainframe, text="Homepage", command=self.mainpage)
+        set_text_button.grid(row=4, column=0, pady=10)
+
+    def check_password(self):
+        passi = self.settextfield.get()
+        if passi == "123croissant":
+            self.filter_settings()
+        else:
+            print("Error: Incorrect Password")
+            self.password()
 
     def filter_settings(self):
         for widgets in self.mainframe.winfo_children():
@@ -150,6 +182,7 @@ class App():
 
             self.text = ttk.Label(self.mainframe, text=i, background="gray", font=("Ubuntu", 12))
             self.text.grid(row=roo, column=0, padx=10)
+
 
 
 
