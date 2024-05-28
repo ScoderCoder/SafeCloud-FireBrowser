@@ -5,6 +5,7 @@
 import tkinter as tk
 from tkinter import ttk 
 
+import webview
 import os
 import json
 
@@ -75,14 +76,28 @@ class App():
     def open_website(self):
         websitetoopen = self.settextfield.get()
 
+        if websitetoopen.startswith(("http://", "https://")):
+            return
+        else:
+            websitetoopen = "http://" + websitetoopen
+
+        if websitetoopen in blist:
+            print("Warning: User attempted to access blocked website.")
+        else:
+            page = webview.create_window('SafeCloud FireBrowser', websitetoopen, confirm_close=True)
+            webview.start()
+
     def add_site(self):
         appe = self.settextfield.get()
 
-        blist.append(appe)
+        if appe in blist:
+            print("Error: Field value exists in list.")
+        else:
+            blist.append(appe)
 
-        refresh()
+            refresh()
 
-        self.filter_settings()
+            self.filter_settings()
 
     def remove_site(self):
         appe = self.unban.get()
